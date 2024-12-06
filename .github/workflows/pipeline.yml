@@ -1,0 +1,20 @@
+name: main_workflow
+on: push
+
+jobs:
+  linter-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@v4"
+
+      - name: Linter
+        uses: "github/super-linter@v7.2.0"
+
+    env:
+      DEFAULT_BRANCH: main
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      LINTER_RULES_PATH: /
+      JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+      VALIDATE_JAVASCRIPT_ES: true

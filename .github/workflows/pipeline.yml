@@ -18,7 +18,7 @@ jobs:
         run: npm install
 
       - name: Linter
-        uses: "github/super-linter@v7.2.0"
+        uses: "github/super-linter@v7"
 
     env:
       DEFAULT_BRANCH: main

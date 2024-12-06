@@ -9,6 +9,14 @@ jobs:
       - name: Checkout
         uses: "actions/checkout@v4"
 
+      - name: Configura Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Instal·la les dependències
+        run: npm install
+
       - name: Linter
         uses: "github/super-linter@v7"
 

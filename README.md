@@ -16,7 +16,7 @@ Executem npm run lint en local perque comprove la sintaxi
 Corregim els errors
 ![](capturas/lint.png)
 
-Creem la carpeta .github i dins de /workflows creem les actions
+Creem la carpeta .github i dins de /workflows creem la primera action que correspon a EsLint
 ![](capturas/linter-job.png)
 
 Example of nextjs project using Cypress.io

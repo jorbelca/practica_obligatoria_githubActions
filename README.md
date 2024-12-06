@@ -10,10 +10,14 @@ Instalem els moduls de node
 Comprovem que el projecte s' inicia
 ![](capturas/start.png)
 
-Iniciem EsLint (crea el .eslintrc.json) i executem npm run lint perque comprove la sintaxi
+Executem npm run lint en local perque comprove la sintaxi
+![](capturas/lint.png)
+
+Corregim els errors
 ![](capturas/lint.png)
 
 Creem la carpeta .github i dins de /workflows creem les actions
+![](capturas/linter-job.png)
 
 Example of nextjs project using Cypress.io
 

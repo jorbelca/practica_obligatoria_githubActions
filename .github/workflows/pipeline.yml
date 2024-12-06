@@ -32,19 +32,19 @@ jobs:
     #needs: linter-job
 
     steps:
-      - name: Checkout code
+      - name: Checkout 
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Configura Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      - name: Install dependencies
+      - name: Instal·la les dependencies
         run: npm install
 
       - name: Run Cypress tests
-        run: npm run cypress:run
+        run: npm run cypress
         continue-on-error: true 
 
       - name: Save test results

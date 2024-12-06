@@ -14,11 +14,11 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Instal·la les dependències
+      - name: Instal·la les dependencies
         run: npm install
 
       - name: Linter
-        uses: "github/super-linter@v7"
+        uses: "github/super-linter@v7.2.0"
 
     env:
       DEFAULT_BRANCH: main

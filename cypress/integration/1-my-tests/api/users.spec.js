@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-
+// eslint-disable-next-line no-unused-vars
 let TOTAL_USERS = 10;
 
 describe("Test de endpoints", () => {
@@ -20,7 +20,7 @@ describe("Test de endpoints", () => {
       cy.request("POST", "api/users", {
         name: testName,
         lastName: testLastName,
-        email: `${testName}@gmai.com`,
+        email: `${testName}@gmai.com`
       }).then((response) => {
         expect(response.body).to.have.property("greeting", `Hello ${testName}`);
       });

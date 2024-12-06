@@ -13,11 +13,19 @@ Comprovem que el projecte s' inicia
 Executem npm run lint en local perque comprove la sintaxi
 ![](capturas/lint.png)
 
-Corregim els errors
-![](capturas/lint.png)
+Corregim tots els errors
+![](capturas/lint_corregit.png)
 
 Creem la carpeta .github i dins de /workflows creem la primera action que correspon a EsLint
 ![](capturas/linter-job.png)
+
+Fem el commit i comprovem que haja passat tots els jobs
+
+Seguidament, executem en local cypress per comprovar que els tests s'executen correctament (corregint el bug que hi havia )
+![](capturas/bug.png)
+![](capturas/cypress-local.png)
+
+
 
 Example of nextjs project using Cypress.io
 

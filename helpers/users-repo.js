@@ -8,7 +8,7 @@ export const usersRepo = {
   create,
   update,
   delete: _delete,
-  deleteAllUsers,
+  deleteAllUsers
 };
 
 function getAll() {
@@ -23,8 +23,9 @@ function create({ name, lastName, email }) {
   const user = { name, lastName, email };
   console.log(user);
   // validate
-  if (users.find((x) => x.email === user.email))
+  if (users.find((x) => x.email === user.email)) {
     throw `Ya existe un usuario con el email ${user.email}`;
+  }
 
   // generate new user id
   user.id = users.length ? Math.max(...users.map((x) => x.id)) + 1 : 1;
@@ -42,8 +43,9 @@ function update(id, { name, lastName, email }) {
   if (
     params.email !== user.email &&
     users.find((x) => x.email === params.email)
-  )
+  ) {
     throw `Ya existe un usuario con el email ${user.email}`;
+  }
 
   // update and save
   Object.assign(user, params);

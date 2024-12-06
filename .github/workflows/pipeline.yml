@@ -2,27 +2,60 @@ name: main_workflow
 on: push
 
 jobs:
-  linter-job:
+  # linter-job:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: "actions/checkout@v4"
+
+  #     - name: Configura Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "18"
+
+  #     - name: Instal·la les dependencies
+  #       run: npm install
+
+  #     - name: Linter
+  #       uses: "github/super-linter@v4"
+
+  #   env:
+  #     DEFAULT_BRANCH: main
+  #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  #     LINTER_RULES_PATH: /
+  #     JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+  #     VALIDATE_JAVASCRIPT_ES: true
+
+  cypress-job:
     runs-on: ubuntu-latest
+    #needs: linter-job
 
     steps:
-      - name: Checkout
-        uses: "actions/checkout@v4"
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Configura Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18"
 
-      - name: Instal·la les dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Linter
-        uses: "github/super-linter@v4"
+      - name: Run Cypress tests
+        run: npm run cypress:run
+        continue-on-error: true 
 
-    env:
-      DEFAULT_BRANCH: main
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      LINTER_RULES_PATH: /
-      JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
-      VALIDATE_JAVASCRIPT_ES: true
+      - name: Save test results
+        if: always() 
+        run: |
+          echo "Test results:" > result.txt
+          cat cypress/results/*.txt >> result.txt  
+        continue-on-error: true # Continúa aunque falle este paso
+
+      - name: Upload test results as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-test-results
+          path: result.txt

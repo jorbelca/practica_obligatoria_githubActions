@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+// eslint-disable-next-line no-unused-vars
 let TOTAL_USERS = 10;
 
 describe("Test de endpoints", () => {

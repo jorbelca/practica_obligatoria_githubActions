@@ -46,14 +46,16 @@ jobs:
           start: npm run dev
           wait-on: "http://localhost:3000"
           browser: chrome
-          summary-title: 'Cypress Test Results'
+          summary-title: "Cypress Test Results"
         continue-on-error: true
 
       - name: Guardar summary com un artifact
-        run: echo "$GITHUB_STEP_SUMMARY" > artifacts/cypress-summary.txt
+        run: |
+          mkdir -p artifacts
+          echo "$GITHUB_STEP_SUMMARY" > artifacts/cypress-summary.txt
 
       - name: Pujar artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-summary
           path: artifacts/cypress-summary.txt

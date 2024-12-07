@@ -32,7 +32,7 @@ jobs:
     #needs: linter-job
 
     steps:
-      - name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Configura Node.js
@@ -40,22 +40,25 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Instal·la les dependencies
+      - name: Instalar dependencies
         run: npm install
 
-      - name: Run Cypress tests
-        run: npm run cypress
-        continue-on-error: true 
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: "http://localhost:3000"
+          browser: chrome
+        continue-on-error: true
 
-      - name: Save test results
-        if: always() 
+      - name: Guardar resultats
         run: |
-          echo "Test results:" > result.txt
-          cat cypress/results/*.txt >> result.txt  
-        continue-on-error: true # Continúa aunque falle este paso
+          mkdir -p artifacts
+          cp cypress/results/output.txt artifacts/result.txt
+        continue-on-error: true
 
-      - name: Upload test results as an artifact
+      - name: Pujar artifact
         uses: actions/upload-artifact@v3
         with:
-          name: cypress-test-results
-          path: result.txt
+          name: cypress-results
+          path: artifacts/result.txt

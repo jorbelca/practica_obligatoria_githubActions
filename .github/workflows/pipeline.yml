@@ -40,25 +40,20 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Instalar dependencies
-        run: npm install
-
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
           wait-on: "http://localhost:3000"
           browser: chrome
+          summary-title: 'Cypress Test Results'
         continue-on-error: true
 
-      - name: Guardar resultats
-        run: |
-          mkdir -p artifacts
-          cp cypress/results/output.txt artifacts/result.txt
-        continue-on-error: true
+      - name: Guardar summary com un artifact
+        run: echo "$GITHUB_STEP_SUMMARY" > artifacts/cypress-summary.txt
 
       - name: Pujar artifact
         uses: actions/upload-artifact@v3
         with:
-          name: cypress-results
-          path: artifacts/result.txt
+          name: cypress-summary
+          path: artifacts/cypress-summary.txt

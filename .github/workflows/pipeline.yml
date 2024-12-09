@@ -57,6 +57,7 @@ jobs:
 
       - name: Guardar resultado del job en result.txt
         run: |
+          mkdir -p artifacts 
           if [ "${{ job.status }}" == "success" ]; then
             echo "success" > artifacts/result.txt
           else

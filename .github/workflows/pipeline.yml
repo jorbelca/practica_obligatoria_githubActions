@@ -59,3 +59,21 @@ jobs:
         with:
           name: cypress-summary
           path: artifacts/result.txt
+##https://github.com/austenstone/job-summary
+
+deploy-job:
+  runs-on: ubuntu-latest
+  needs: cypress-job 
+
+  steps:
+  
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }} # Token d'autenticació a Vercel
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # ID de l'organització a Vercel
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID del projecte a Vercel
+        working-directory: . 

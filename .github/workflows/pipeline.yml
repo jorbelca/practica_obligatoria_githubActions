@@ -97,7 +97,7 @@ jobs:
           author_email: "j.belda@test.com"
           message: "Actualiza el readme"
           push: true
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.TOKEN_BADGE}}
 
   # deploy-job:
   #   runs-on: ubuntu-latest

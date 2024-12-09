@@ -1,0 +1,9 @@
+name: "Update README Badge"
+description: "Modifica el README.md agregando un badge según el resultado de los tests"
+inputs:
+  test_result:
+    description: "Resultado de los tests (success o failure)"
+    required: true
+runs:
+  using: "node20"
+  main: "src/dist/index.js"

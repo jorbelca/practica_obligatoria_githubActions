@@ -53,8 +53,7 @@ jobs:
       - name: Guardar summary com un artifact
         run: |
           mkdir -p artifacts
-          echo "Resultados de prueba de Cypress" >> $GITHUB_STEP_SUMMARY
-          cat $GITHUB_STEP_SUMMARY > artifacts/result.txt
+          echo "success" > artifacts/result.txt
 
       - name: Pujar artifact
         uses: actions/upload-artifact@v4
@@ -62,6 +61,41 @@ jobs:
           name: cypress-summary
           path: artifacts/result.txt
   ##https://github.com/austenstone/job-summary
+
+  add_badge_job:
+    runs-on: ubuntu-latest
+    needs: cypress-job
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Recuperar artifact de Cypress
+        uses: actions/download-artifact@v4
+        with:
+          name: cypress-summary
+          path: .
+
+      - name: Generar output a partir del resultat
+        run: |
+          CYPRESS_OUTCOME=$(cat result.txt)
+          echo "::set-output name=cypress_outcome::$CYPRESS_OUTCOME"
+          id: generate-output
+
+      - name: Actualizar README.md amb el badge
+        uses: ./.github/actions/update-badge
+        with:
+          test_result: ${{ steps.generate-output.outputs.cypress_outcome }}
+
+      - name: Publicar canvis en el README.md
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "."
+          author_name: "Jordi Belda"
+          author_email: "j.belda@test.com"
+          message: "Actualiza el readme"
+          push: true
+          token: ${{secrets.GITHUB_TOKEN}}
 
   deploy-job:
     runs-on: ubuntu-latest

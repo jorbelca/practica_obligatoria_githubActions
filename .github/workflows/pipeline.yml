@@ -85,7 +85,7 @@ jobs:
       #     id: generate-output
 
       - name: Actualizar README.md amb el badge
-        uses: .github/workflows/actions/update-badge
+        uses: /.github/workflows/actions/update-badge
         with:
           test_result: ${{needs.cypress-job.result}}
 

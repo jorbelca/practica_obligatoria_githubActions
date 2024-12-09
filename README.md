@@ -40,11 +40,13 @@ Primer que res hem de vincular el nostre projecte amb Vercel, per aixo executem 
 
 Generem un token desde Vercel i amb els tokens que ha generat la vinculacio del projecte els almacenem com a secrets per a les actions
 ![](capturas/token_vercel.png)
-
+![](capturas/secrets-vercel.png)
 Creem el deploy-job que consistirá en un checkout i l' action específica de Vercel
 ![](capturas/deploy-job.png)
 
 Fem el commit i comprovem que haja passat tots els jobs i que s'haja desplegat correctament a Vercel.
+![](capturas/vercel-job-ok.png)
+![](capturas/vercel-despliegue.png)
 
 ### Notification-job
 

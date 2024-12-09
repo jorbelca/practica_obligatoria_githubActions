@@ -52,7 +52,7 @@ jobs:
       - name: Guardar summary com un artifact
         run: |
           mkdir -p artifacts
-          cat $GITHUB_STEP_SUMMARY > artifacts/result.txt
+          cat job.cypress-job.result > artifacts/result.txt
 
       - name: Pujar artifact
         uses: actions/upload-artifact@v4

@@ -50,11 +50,6 @@ jobs:
           summary-title: "Cypress Test Results"
         continue-on-error: true
 
-      # - name: Guardar summary com un artifact
-      #   run: |
-      #     mkdir -p artifacts
-      #     echo "success" > artifacts/result.txt
-
       - name: Guardar resultado del job en result.txt
         run: |
           mkdir -p artifacts 
@@ -69,7 +64,6 @@ jobs:
         with:
           name: cypress-summary
           path: artifacts/result.txt
-  ##https://github.com/austenstone/job-summary
 
   add_badge_job:
     runs-on: ubuntu-latest
@@ -91,7 +85,7 @@ jobs:
       #     id: generate-output
 
       - name: Actualizar README.md amb el badge
-        uses: ./.github/actions/update-badge
+        uses: ./.github/workflows/actions/update-badge
         with:
           test_result: ${{needs.cypress-job.result}}
 

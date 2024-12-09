@@ -50,10 +50,18 @@ jobs:
           summary-title: "Cypress Test Results"
         continue-on-error: true
 
-      - name: Guardar summary com un artifact
+      # - name: Guardar summary com un artifact
+      #   run: |
+      #     mkdir -p artifacts
+      #     echo "success" > artifacts/result.txt
+
+      - name: Guardar resultado del job en result.txt
         run: |
-          mkdir -p artifacts
-          echo "success" > artifacts/result.txt
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "success" > artifacts/result.txt
+          else
+            echo "failure" > artifacts/result.txt
+          fi
 
       - name: Pujar artifact
         uses: actions/upload-artifact@v4
@@ -84,7 +92,7 @@ jobs:
       - name: Actualizar README.md amb el badge
         uses: ./.github/actions/update-badge
         with:
-          test_result: "success"
+          test_result: ${{needs.cypress-job.result}}
 
       - name: Publicar canvis en el README.md
         uses: EndBug/add-and-commit@v9

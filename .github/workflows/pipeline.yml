@@ -29,7 +29,7 @@ jobs:
 
   cypress-job:
     runs-on: ubuntu-latest
-    #needs: linter-job
+    needs: linter-job
 
     steps:
       - name: Checkout

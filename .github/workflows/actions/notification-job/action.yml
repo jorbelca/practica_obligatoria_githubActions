@@ -1,6 +1,6 @@
 name: "Enviar notificación por correo"
 description: "Envía una notificación por correo sobre el resultado del workflow"
-author: "Tu Nombre"
+author: "Jordi Belda"
 inputs:
   recipient_email:
     description: "Correo electrónico del destinatario"

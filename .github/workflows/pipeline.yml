@@ -126,14 +126,18 @@ jobs:
       - add_badge_job
       - deploy-job
     steps:
-      - name: Send Notification
-        uses: ./.github/workflows/actions/notification-job
-        with:
-          mailgun_api_key: ${{ secrets.MAIL_KEY }}
-          recipient_email: ${{ secrets.RECIPIENT_EMAIL }}
-          workflow_status: ${{ job.status }}
-          workflow_name: ${{ github.workflow }}
-          linter_result: ${{ needs.linter_job.result }}
-          cypress_result: ${{ needs.cypress_job.result }}
-          add_badge_result: ${{ needs.add_badge_job.result }}
-          deploy_result: ${{ needs.deploy_job.result }}
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+
+        - name: Send Notification
+          uses: ./.github/workflows/actions/notification-job
+          with:
+            mailgun_api_key: ${{ secrets.MAIL_KEY }}
+            recipient_email: ${{ secrets.RECIPIENT_EMAIL }}
+            workflow_status: ${{ job.status }}
+            workflow_name: ${{ github.workflow }}
+            linter_result: ${{ needs.linter_job.result }}
+            cypress_result: ${{ needs.cypress_job.result }}
+            add_badge_result: ${{ needs.add_badge_job.result }}
+            deploy_result: ${{ needs.deploy_job.result }}

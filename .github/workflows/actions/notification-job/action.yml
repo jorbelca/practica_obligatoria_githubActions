@@ -1,0 +1,28 @@
+name: "Enviar notificación por correo"
+description: "Envía una notificación por correo sobre el resultado del workflow"
+author: "Tu Nombre"
+inputs:
+  recipient_email:
+    description: "Correo electrónico del destinatario"
+    required: true
+  workflow_name:
+    description: "Nombre del workflow"
+    required: true
+  linter_result:
+    description: "Resultado del linter_job"
+    required: true
+  cypress_result:
+    description: "Resultado del cypress_job"
+    required: true
+  add_badge_result:
+    description: "Resultado del add_badge_job"
+    required: true
+  deploy_result:
+    description: "Resultado del deploy_job"
+    required: true
+outputs:
+  status:
+    description: "Estado del envío del correo"
+runs:
+  using: "node20"
+  main: "dist/index.js" 

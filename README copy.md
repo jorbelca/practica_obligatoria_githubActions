@@ -77,7 +77,7 @@ Les accions personalitzades permeten definir tasques específiques reutilitzable
 • Docker-container actions: Funcionen en entorns Linux. Són més lentes però consistents.
 • Javascript actions: Més ràpides i lleugeres, però han de ser compatibles amb tots els runners si s’utilitzen fora de Linux.
 
-```yaml 
+```yaml
 name: Salutació
 description: Acció per saludar
 inputs:
@@ -126,6 +126,45 @@ Seguidament, executem en local cypress per comprovar que els tests s'executen co
 Fem el commit i comprovem que haja passat tots els jobs i que haja generat correctament l' artifact
 
 ### Badge-job
+
+Primer, creem un projecte de node amb npm init -y dins del nou directori actions/update-badge
+![](capturas/badge/npm_init_badge.png)
+
+Seguidament, creem el arxiu action.yml que consisteix en una accio personalitzada que te com a input obligatori el resultat del test que hem executat anteriorment amb cypress. Tot s'executa en node 20
+
+![](capturas/badge/badge_action.png)
+
+Creem l'arxiu index.js a l' arrel del projecte que será el que conté tota la lógica que duga a terme l'acció. Es una funció en javascript que te com a únic argument test_result i que dependent de el seu valor asigna una imatge diferent a la variable badge.
+Finalment, el script modifica l' arxiu README.md i asigna el valor de badge dins d'uns comentaris especifics.
+
+![](capturas/badge/badge_index.png)
+
+Tot seguit, instalem les dependencies (actions/core i actions/github i vercel/ncc ) per a que el script funcione degudament i pugam compilar-lo.
+![](capturas/badge/npm_i_npm_build.png.png)
+
+Captura del package.json de l'acció
+![](capturas/badge/badge_pckg.png)
+
+Passant a les accions generals, definim un nou job que conte:
+
+- Precisa de l'accio anterior per poder executar-se
+- Checkout, per accedir als arxius del projecte
+- Descarrega el artifact de l'acció anterior
+- Crea i asigna a una variable el contingut del artifact
+- Crida a la action personalitzada que acavem de crear amb la variable
+- Finalment, per modificar el Readme fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura
+
+<!-- FALTA LA NOVA LA CAPTURA -->
+
+![](capturas/badge/badge_job.png)
+
+Per poder modificar el readme, necessitem d' un token amb permisos d'esciptura en el repo. El creem i el vinculem a una variable d' entorn
+![](capturas/badge/token_1.png)
+![](capturas/badge/token_2.png)
+
+Pugem els canvis i comprovem que s'executen les dos actions associades.
+![](capturas/badge/ok_1.png)
+![](capturas/badge/ok_2.png)
 
 ### Deploy-job
 

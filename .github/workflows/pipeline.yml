@@ -2,30 +2,30 @@ name: main_workflow
 on: push
 
 jobs:
-  # linter-job:
-  #   runs-on: ubuntu-latest
+  linter-job:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: "actions/checkout@v4"
+    steps:
+      - name: Checkout
+        uses: "actions/checkout@v4"
 
-  #     - name: Configura Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "18"
+      - name: Configura Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
 
-  #     - name: Instal·la les dependencies
-  #       run: npm install
+      - name: Instal·la les dependencies
+        run: npm install
 
-  #     - name: Linter
-  #       uses: "github/super-linter@v4"
+      - name: Linter
+        uses: "github/super-linter@v4"
 
-  #   env:
-  #     DEFAULT_BRANCH: main
-  #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  #     LINTER_RULES_PATH: /
-  #     JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
-  #     VALIDATE_JAVASCRIPT_ES: true
+    env:
+      DEFAULT_BRANCH: main
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      LINTER_RULES_PATH: /
+      JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+      VALIDATE_JAVASCRIPT_ES: true
 
   cypress-job:
     runs-on: ubuntu-latest
@@ -101,18 +101,39 @@ jobs:
           push: true
           token: ${{secrets.TOKEN_BADGE}}
 
-  # deploy-job:
-  #   runs-on: ubuntu-latest
-  #   needs: cypress-job
+  deploy-job:
+    runs-on: ubuntu-latest
+    needs: cypress-job
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Deploy to Vercel
-  #       uses: amondnet/vercel-action@v25
-  #       with:
-  #         vercel-token: ${{ secrets.VERCEL_TOKEN }} # Token d'autenticació a Vercel
-  #         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # ID de l'organització a Vercel
-  #         vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID del projecte a Vercel
-  #         working-directory: .
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Token d'autenticació a Vercel
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # ID de l'organització a Vercel
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID del projecte a Vercel
+          working-directory: .
+
+  notification-job:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - linter_job
+      - cypress_job
+      - add_badge_job
+      - deploy_job
+    steps:
+      - name: Send Notification
+        uses: ./.github/workflows/actions/notification-job
+        with:
+          mailgun_api_key: ${{ secrets.MAIL_KEY }}
+          recipient_email: ${{ secrets.RECIPIENT_EMAIL }}
+          workflow_status: ${{ job.status }}
+          workflow_name: ${{ github.workflow }}
+          linter_result: ${{ needs.linter_job.result }}
+          cypress_result: ${{ needs.cypress_job.result }}
+          add_badge_result: ${{ needs.add_badge_job.result }}
+          deploy_result: ${{ needs.deploy_job.result }}

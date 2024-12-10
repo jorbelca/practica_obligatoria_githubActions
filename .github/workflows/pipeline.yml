@@ -121,10 +121,10 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
-      - linter_job
-      - cypress_job
+      - linter-job
+      - cypress-job
       - add_badge_job
-      - deploy_job
+      - deploy-job
     steps:
       - name: Send Notification
         uses: ./.github/workflows/actions/notification-job

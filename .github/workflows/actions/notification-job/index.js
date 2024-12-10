@@ -8,6 +8,7 @@ try {
   const mg = mailgun.client({
     username: "api",
     key: core.getInput("mailgun_api_key"),
+    url: "https://api.eu.mailgun.net",
   });
 
   // Datos del correo

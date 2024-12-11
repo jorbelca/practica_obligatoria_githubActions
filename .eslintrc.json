@@ -25,6 +25,7 @@
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/anchor-is-valid": "warn",
+    "@next/next/no-html-link-for-pages": "off",
     "import/order": [
       "error",
       {

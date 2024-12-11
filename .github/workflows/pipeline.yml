@@ -12,20 +12,20 @@ jobs:
       - name: Configura Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Instal·la les dependencies
-        run: npm install
+        run: npm ci
 
       - name: Linter
-        uses: "github/super-linter@v4"
+        run: npm run lint
 
-    env:
-      DEFAULT_BRANCH: main
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      LINTER_RULES_PATH: /
-      JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
-      VALIDATE_JAVASCRIPT_ES: true
+    # env:
+    #   DEFAULT_BRANCH: main
+    #   GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    #   LINTER_RULES_PATH: /
+    #   JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+    #   VALIDATE_JAVASCRIPT_ES: true
 
   cypress-job:
     runs-on: ubuntu-latest

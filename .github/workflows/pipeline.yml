@@ -46,7 +46,6 @@ jobs:
 
       - name: Guardar resultado del job en result.txt
         run: |
-          echo Cypress finished with: ${{ steps.cypress.outcome }}
           mkdir -p artifacts 
           if [ "${{ steps.cypress.outcome }}" == "success" ]; then
             echo "success" > artifacts/result.txt
@@ -76,15 +75,16 @@ jobs:
           name: cypress-summary
           path: .
 
-      # - name: Generar output a partir del resultat
-      #   run: |
-      #     CYPRESS_OUTCOME=$(cat result.txt)
-      #     id: generate-output
+      - name: Generar output a partir del resultat
+        run: |
+          CYPRESS_OUTCOME=$(cat result.txt)
+          echo "CYPRESS_OUTCOME=$CYPRESS_OUTCOME" >> $GITHUB_ENV
+          echo "Resultado de Cypress: $CYPRESS_OUTCOME"
 
       - name: Actualizar README.md amb el badge
         uses: ./.github/workflows/actions/update-badge
         with:
-          test_result: ${{needs.cypress-job.result}}
+          test_result: ${{env.CYPRESS_OUTCOME}}
 
       - name: Publicar canvis en el README.md
         uses: EndBug/add-and-commit@v9

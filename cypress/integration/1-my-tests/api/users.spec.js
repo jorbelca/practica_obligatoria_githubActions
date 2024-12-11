@@ -32,6 +32,9 @@ describe("Test de endpoints", () => {
       expect(response.body).to.have.lengthOf(TOTAL_USERS);
     });
   });
+  it("Test fallo", () => {
+    cy.expect(1).to.equal(2);
+  });
 
   after(() => {
     cy.visit("/");

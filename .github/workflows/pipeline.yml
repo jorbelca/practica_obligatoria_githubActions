@@ -35,6 +35,7 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        id: cypress
         with:
           start: npm run dev
           wait-on: "http://localhost:3000"
@@ -45,8 +46,9 @@ jobs:
 
       - name: Guardar resultado del job en result.txt
         run: |
+          echo Cypress finished with: ${{ steps.cypress.outcome }}
           mkdir -p artifacts 
-          if [ "${{ job.status }}" == "success" ]; then
+          if [ "${{ steps.cypress.outcome }}" == "success" ]; then
             echo "success" > artifacts/result.txt
           else
             echo "failure" > artifacts/result.txt

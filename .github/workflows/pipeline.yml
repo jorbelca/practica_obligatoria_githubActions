@@ -101,6 +101,9 @@ jobs:
     needs: cypress-job
 
     steps:
+      - name: Deploy step
+        run: exit 1 # Forzamos el fallo en el deploy-job
+        
       - name: Checkout
         uses: actions/checkout@v4
 

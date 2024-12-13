@@ -19,8 +19,6 @@ jobs:
 
       - name: Linter
         run: npm run lint
-    outputs:
-      result: ${{ job.status }}
 
   cypress-job:
     runs-on: ubuntu-latest
@@ -60,8 +58,6 @@ jobs:
         with:
           name: cypress-summary
           path: artifacts/result.txt
-    outputs:
-      result: ${{ job.status }}
 
   add_badge_job:
     runs-on: ubuntu-latest
@@ -99,8 +95,6 @@ jobs:
           message: "Actualiza el readme"
           push: true
           token: ${{secrets.TOKEN_BADGE}}
-    outputs:
-      result: ${{ job.status }}
 
   deploy-job:
     runs-on: ubuntu-latest
@@ -117,8 +111,6 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # ID de l'organització a Vercel
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID del projecte a Vercel
           working-directory: .
-    outputs:
-      result: ${{ job.status }}
 
   notification-job:
     runs-on: ubuntu-latest
@@ -139,7 +131,7 @@ jobs:
           id: ${{ secrets.ID_USER }}
           workflow_status: ${{ job.status }}
           workflow_name: ${{ github.workflow }}
-          linter_result: ${{ needs.linter_job.outputs.result }}
-          cypress_result: ${{ needs.cypress_job.outputs.result }}
-          add_badge_result: ${{ needs.add_badge_job.outputs.result }}
-          deploy_result: ${{ needs.deploy_job.outputs.result }}
+          linter_result: ${{ needs.linter-job.result }}
+          cypress_result: ${{ needs.cypress-job.result }}
+          add_badge_result: ${{ needs.add_badge_job.result }}
+          deploy_result: ${{ needs.deploy-job.result }}

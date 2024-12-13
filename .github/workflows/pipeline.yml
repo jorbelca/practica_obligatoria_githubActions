@@ -103,7 +103,7 @@ jobs:
     steps:
       - name: Deploy step
         run: exit 1 # Forzamos el fallo en el deploy-job
-        
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -132,7 +132,7 @@ jobs:
         with:
           token: ${{ secrets.BOT_TOKEN }}
           id: ${{ secrets.ID_USER }}
-          workflow_status: ${{ job.status }}
+
           workflow_name: ${{ github.workflow }}
           linter_result: ${{ needs.linter-job.result }}
           cypress_result: ${{ needs.cypress-job.result }}

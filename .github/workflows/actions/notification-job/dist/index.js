@@ -82922,7 +82922,6 @@ try {
   const bot = new TelegramBot(token);
 
   // Datos
-  const workflowStatus = core.getInput("workflow_status");
   const workflowName = core.getInput("workflow_name");
 
   // Resultados de los jobs
@@ -82941,8 +82940,6 @@ S'ha realitzat un push en la branca *main* que ha provocat l'execució del workf
 - *cypress_job*: ${cypressResult}
 - *add_badge_job*: ${addBadgeResult}
 - *deploy_job*: ${deployResult}
-
-*Estat del workflow:* ${workflowStatus}
 `;
   // Enviar
   bot

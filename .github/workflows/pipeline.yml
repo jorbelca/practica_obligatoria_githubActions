@@ -131,8 +131,7 @@ jobs:
           id: ${{ secrets.ID_USER }}
           workflow_status: ${{ job.status }}
           workflow_name: ${{ github.workflow }}
-          linter_result: ${{ needs.linter_job.result }}
-          cypress_result: ${{ needs.cypress_job.result }}
-          add_badge_result: ${{ needs.add_badge_job.result }}
-          deploy_result: ${{ needs.deploy_job.result }}
-          
+          linter_result: ${{ needs.linter_job.status }}
+          cypress_result: ${{ needs.cypress_job.status }}
+          add_badge_result: ${{ needs.add_badge_job.status }}
+          deploy_result: ${{ needs.deploy_job.status }}

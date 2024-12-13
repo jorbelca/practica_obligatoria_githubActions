@@ -135,3 +135,5 @@ jobs:
           cypress_result: ${{ needs.cypress_job.result }}
           add_badge_result: ${{ needs.add_badge_job.result }}
           deploy_result: ${{ needs.deploy_job.result }}
+
+          

@@ -112,26 +112,26 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID del projecte a Vercel
           working-directory: .
 
-  # notification-job:
-  #   runs-on: ubuntu-latest
-  #   if: always()
-  #   needs:
-  #     - linter-job
-  #     - cypress-job
-  #     - add_badge_job
-  #     - deploy-job
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  notification-job:
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - linter-job
+      - cypress-job
+      - add_badge_job
+      - deploy-job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Send Notification
-  #       uses: ./.github/workflows/actions/notification-job
-  #       with:
-  #         mailgun_api_key: ${{ secrets.MAIL_KEY }}
-  #         recipient_email: ${{ secrets.RECIPIENT_EMAIL }}
-  #         workflow_status: ${{ job.status }}
-  #         workflow_name: ${{ github.workflow }}
-  #         linter_result: ${{ needs.linter_job.result }}
-  #         cypress_result: ${{ needs.cypress_job.result }}
-  #         add_badge_result: ${{ needs.add_badge_job.result }}
-  #         deploy_result: ${{ needs.deploy_job.result }}
+      - name: Send Notification
+        uses: ./.github/workflows/actions/notification-job
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+          id: ${{ secrets.ID_USER }}
+          workflow_status: ${{ job.status }}
+          workflow_name: ${{ github.workflow }}
+          linter_result: ${{ needs.linter_job.result }}
+          cypress_result: ${{ needs.cypress_job.result }}
+          add_badge_result: ${{ needs.add_badge_job.result }}
+          deploy_result: ${{ needs.deploy_job.result }}

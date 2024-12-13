@@ -1,9 +1,12 @@
-name: "Enviar notificación por correo"
-description: "Envía una notificación por correo sobre el resultado del workflow"
+name: "Enviar notificación por telegram"
+description: "Envía una notificación por telegram sobre el resultado del workflow"
 author: "Jordi Belda"
 inputs:
-  recipient_email:
-    description: "Correo electrónico del destinatario"
+  token:
+    description: "Token del bot de Telegram"
+    required: true
+  id:
+    description: "Id del usuario de Telegram"
     required: true
   workflow_name:
     description: "Nombre del workflow"
@@ -25,4 +28,4 @@ outputs:
     description: "Estado del envío del correo"
 runs:
   using: "node20"
-  main: "dist/index.js" 
+  main: "dist/index.js"

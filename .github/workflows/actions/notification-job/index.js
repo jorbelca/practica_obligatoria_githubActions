@@ -1,18 +1,13 @@
 const core = require("@actions/core");
-const formData = require("form-data");
-const Mailgun = require("mailgun.js");
+const TelegramBot = require("node-telegram-bot-api");
 
 try {
-  // Configuración de Mailgun
-  const mailgun = new Mailgun(formData);
-  const mg = mailgun.client({
-    username: "api",
-    key: core.getInput("mailgun_api_key"),
-    url: "https://api.eu.mailgun.net",
-  });
+  // Configuración del Bot
+  const token = core.getInput("token");
+  const chatID = core.getInput("id");
+  const bot = new TelegramBot(token, { polling: true });
 
-  // Datos del correo
-  const recipient = core.getInput("recipient_email");
+  // Datos
   const workflowStatus = core.getInput("workflow_status");
   const workflowName = core.getInput("workflow_name");
 
@@ -23,28 +18,21 @@ try {
   const deployResult = core.getInput("deploy_result");
 
   // Crear mensaje
-  const subject = `Resultat del workflow: ${workflowName}`;
   const messageBody = `
-  <h1>Notificació del workflow</h1>
-  <p>S'ha realitzat un push en la branca <strong>main</strong> que ha provocat l'execució del workflow <strong>${workflowName}</strong> amb els següents resultats:</p>
-  <ul>
-    <li><strong>linter_job</strong>: ${linterResult}</li>
-    <li><strong>cypress_job</strong>: ${cypressResult}</li>
-    <li><strong>add_badge_job</strong>: ${addBadgeResult}</li>
-    <li><strong>deploy_job</strong>: ${deployResult}</li>
-  </ul>
-  <p><strong>Estat del workflow:</strong> ${workflowStatus}</p>
+ 📢 *Notificació del workflow*
+
+S'ha realitzat un push en la branca *main* que ha provocat l'execució del workflow *${workflowName}* amb els següents resultats:
+
+- *linter_job*: ${linterResult}
+- *cypress_job*: ${cypressResult}
+- *add_badge_job*: ${addBadgeResult}
+- *deploy_job*: ${deployResult}
+
+*Estat del workflow:* ${workflowStatus}
 `;
-  // Enviar correo
-  mg.messages
-    .create("sandbox-123.mailgun.org", {
-      from: `GitHub Actions <mailgun@sandbox49597b6d9d3d498a81496cd0f9efcafd.mailgun.org>`,
-      to: [recipient],
-      subject: subject,
-      html: messageBody,
-    })
-    .then((msg) => console.log("Email sent:", msg))
-    .catch((err) => core.setFailed(`Error sending email: ${err.message}`));
+  // Enviar
+  bot.sendMessage(chatID, messageBody);
+  core.setOutput("msg", "Mesaje enviado correctamente");
 } catch (error) {
   core.setFailed(`Action failed: ${error.message}`);
 }

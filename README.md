@@ -106,7 +106,7 @@ Instalem els moduls de node
 ![](capturas/npm_i.png)
 
 Comprovem que el projecte s' inicia correctament
-![](capturas/start.png) 
+![](capturas/start.png)
 
 ### Linter-job
 
@@ -158,8 +158,6 @@ Passant a les accions generals, definim un nou job que conte:
 - Crida a la action personalitzada que acavem de crear amb la variable
 - Finalment, per modificar el Readme fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura
 
-<!-- FALTA LA NOVA LA CAPTURA -->
-
 ![](capturas/badge/badge_job.png)
 
 Per poder modificar el readme, necessitem d' un token amb permisos d'esciptura en el repo. El creem i el vinculem a una variable d' entorn
@@ -169,6 +167,17 @@ Per poder modificar el readme, necessitem d' un token amb permisos d'esciptura e
 Pugem els canvis i comprovem que s'executen les dos actions associades.
 ![](capturas/badge/ok_1.png)
 ![](capturas/badge/ok_2.png)
+
+FALLO
+Per tal de comprovar que posa el badge de fallo, insertem un test que falle.
+![](capturas/badge/fallo.png)
+
+Fem el commit, pugem els canvis i esperem a que s'executen els works corresponents i comprovem els logs:
+![](capturas/badge/false_2.png)
+![](capturas/badge/false_1.png)
+
+Badge actualizat:
+![](capturas/badge/false_3.png)
 
 ### Deploy-job
 
@@ -187,6 +196,7 @@ Fem el commit i comprovem que haja passat tots els jobs i que s'haja desplegat c
 
 ### Notification-job
 
+(Com vam parlar en clase, canviem l'envio de un mail per un missatge a Telegram)
 
 ### Readme
 
@@ -213,5 +223,7 @@ Finalment, comprovem que el readme s'haja actualizat correctament
 # Badge de Cypress
 
 <!---Start place for the badge -->
+
 [![Failure](https://img.shields.io/badge/test-failure-red)](https://www.cypress.io/)
+
 <!---End place for the badge -->

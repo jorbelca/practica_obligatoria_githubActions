@@ -5,7 +5,7 @@ try {
   // Configuración del Bot
   const token = core.getInput("token");
   const chatID = core.getInput("id");
-  const bot = new TelegramBot(token, { polling: true });
+  const bot = new TelegramBot(token);
 
   // Datos
   const workflowStatus = core.getInput("workflow_status");
@@ -18,7 +18,7 @@ try {
   const deployResult = core.getInput("deploy_result");
 
   // Crear mensaje
-  const messageBody = `
+  const message = `
  📢 *Notificació del workflow*
 
 S'ha realitzat un push en la branca *main* que ha provocat l'execució del workflow *${workflowName}* amb els següents resultats:
@@ -31,8 +31,12 @@ S'ha realitzat un push en la branca *main* que ha provocat l'execució del workf
 *Estat del workflow:* ${workflowStatus}
 `;
   // Enviar
-  bot.sendMessage(chatID, messageBody);
-  core.setOutput("msg", "Mesaje enviado correctamente");
+  bot
+    .sendMessage(chatID, message, { parse_mode: "Markdown" })
+    .then(() => core.setOutput("msg", "Mensaje enviado correctamente"))
+    .catch((error) =>
+      core.setFailed(`Error al enviar mensaje: ${error.message}`)
+    );
 } catch (error) {
   core.setFailed(`Action failed: ${error.message}`);
 }

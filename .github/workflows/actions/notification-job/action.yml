@@ -11,6 +11,9 @@ inputs:
   workflow_name:
     description: "Nombre del workflow"
     required: true
+  workflow_status:
+    description: "Estado del workflow"
+    required: false
   linter_result:
     description: "Resultado del linter_job"
     required: true

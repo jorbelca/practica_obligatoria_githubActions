@@ -102,36 +102,82 @@ Primer que res, creem un repositori propi i clonem el repo que ens dona l’ enu
 ![](capturas/1.png)
 ![](capturas/clonar.png)
 
-Instalem els moduls de node
+Instalem els moduls de node amb npm i (install)
 ![](capturas/npm_i.png)
 
 Comprovem que el projecte s' inicia correctament
 ![](capturas/start.png)
+![](capturas/1a.png)
 
 ### Linter-job
 
 Executem npm run lint en local perque comprove la sintaxi
 ![](capturas/linter/lint.png)
 
-Corregim tots els errors
+Corregim tots els errors i executem npm lint
+
+FALTA CAPTURA DELS ERRORS I LA SEUA CORRECCIO
 ![](capturas/linter/lint_corregit.png)
 
-Creem la carpeta .github i dins de /workflows creem la primera action que correspon a EsLint
-![](capturas/linter/linter-job.png)
+Creem la carpeta .github i dins de /workflows creem l'arxiu pipeline.yml amb:
 
-Fem el commit i comprovem que haja passat tots els jobs
+- Nom: main
+- Que s'execute cada vegada que fem un push al repositori
+
+I definim un nou job que correspon a EsLint i que conte:
+
+- S'executa amb l' ultima versió d'Ubuntu
+- Primer pas
+  - Executa l'action Checkout, per accedir als arxius del projecte
+- Segon pas
+  - Executa l'action setup-node per instalar i configurar node en el job amb la versio 20.
+- Tercer pas, instalar dependencies
+- Quart pas
+  - Executa npm run lint per executar eslint en el codi del projecte
+
+![](capturas/linter/job.png)
+
+Fem el commit i comprovem que passe el job de linter
+![](capturas/linter/ok.png)
 
 ### Cypress-job
 
-Seguidament, executem en local cypress per comprovar que els tests s'executen correctament (corregint el bug que hi havia )
+Primerament, executem i comprovem que els test no passen en local.
+Seguidament, amb els resultats corregim els errors que hi havia en el codi
+FALTA CAPTURA DE TOTS ELS ERRORS I LA SEUA CORRECCIO
 ![](capturas/cypress/bug.png)
+
+Tornem a executar en local cypress per comprovar que els tests s'executen correctament
 ![](capturas/cypress/cypress-local.png)
 
+Dins de /workflows creem l' action que correspon a Cypress
+
+- S'executa amb l' ultima versió d'Ubuntu
+- Precisa del lint-job per a poder executar-se
+- Primer pas
+  - Executa l'action Checkout, per accedir als arxius del projecte
+- Segon pas
+  - Executa l'action setup-node per instalar i configurar node en el job amb la versio 20.
+- Tercer pas
+  - Amb l'action cypress-io, executem els tests (npm run dev):
+    - En chrome
+    - Te que esperar a que localhost:3000 estiga actiu abans de començar
+    - Publica els resultats
+    - Continua encara que fallen
+- Quart pas
+  - Guarda el resultat dels tests (success o failure) en un arxiu dins de la carpeta artifacts
+- Quint pas  
+  -Agafant l' arxiu generat en el pas anterior el puja amb un artifact i l'exposa a l'exterior amb l' accio corresponent (upload-artifact)
+
+![](capturas/cypress/job.png)
+
 Fem el commit i comprovem que haja passat tots els jobs i que haja generat correctament l' artifact
+![](capturas/cypress/ok.png)
+![](capturas/cypress/artifact.png)
 
 ### Badge-job
 
-Primer, creem un projecte de node amb npm init -y dins del nou directori actions/update-badge
+Primer, creem un nou directori actions/update-badge , i iniciem un projecte de node amb npm init -y
 ![](capturas/badge/npm_init_badge.png)
 
 Seguidament, creem el arxiu action.yml que consisteix en una accio personalitzada que te com a input obligatori el resultat del test que hem executat anteriorment amb cypress. Tot s'executa en node 20
@@ -149,7 +195,7 @@ Tot seguit, instalem les dependencies (actions/core i actions/github i vercel/nc
 Captura del package.json de l'acció
 ![](capturas/badge/badge_pckg.png)
 
-Passant a les accions generals, definim un nou job que conte:
+Passem al pipeline i definim un nou job que conte:
 
 - Precisa de l'accio anterior per poder executar-se
 - Checkout, per accedir als arxius del projecte
@@ -223,5 +269,7 @@ Finalment, comprovem que el readme s'haja actualizat correctament
 # Badge de Cypress
 
 <!---Start place for the badge -->
+
 [![Cypress.io](https://img.shields.io/badge/tested%20with-Cypress-04C38E.svg)](https://www.cypress.io/)
+
 <!---End place for the badge -->

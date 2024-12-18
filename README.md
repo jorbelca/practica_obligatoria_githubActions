@@ -11,18 +11,21 @@ Va més enllà del CI assegurant que el codi sempre està llest per ser desplega
 • Continuous Deployment (CD):
 Porta el lliurament continu a un altre nivell: cada canvi aprovat es desplega automàticament a producció. Això requereix processos de prova robustos per evitar problemes.
 
-## Automatització de fluxos de treball
+## Github Actions
 
 És la solució de Github per implementar CI/CD d’una manera senzilla i integrada. Permet automatitzar tasques com provar, construir i desplegar codi amb només configurar un fitxer YAML.
 
 Components principals:
-• Workflow: Seqüència automatitzada de passos que s’activa per esdeveniments (push, PR, etc.).
-• Jobs: Agrupen passos individuals que s’executen en un mateix entorn (runner). Els jobs poden ser paral·lels o seqüencials.
-• Steps: Cada tasca dins d’un job, com executar comandes o utilitzar accions predefinides.
-• Actions: Blocs reutilitzables de funcionalitat que s’integren en els steps.
-• Runner: El servidor (hosted o self-hosted) on s’executen els jobs.
+
+- Workflow: Seqüència automatitzada de passos que s’activa per esdeveniments (push, PR, etc.).
+- Jobs: Agrupen passos individuals que s’executen en un mateix entorn (runner). Els jobs poden ser paral·lels o seqüencials.
+- Steps: Cada tasca dins d’un job, com executar comandes o utilitzar accions predefinides.
+- Actions: Blocs reutilitzables de funcionalitat que s’integren en els steps.
+- Runner: El servidor (hosted o self-hosted) on s’executen els jobs.
 
 ## Runners: Què són i tipus
+
+Son servidors que executen els passos d’un flux de treball. És com l’encarregat de dur a terme les tasques definides en el teu fitxer YAML de workflows (per exemple, construir, provar o desplegar una aplicació).
 
 • Github-hosted runners:
 Estan al núvol, sense necessitat de configuració ni manteniment. Disposen de sistemes operatius com Windows, MacOS i Ubuntu. Es paga pel temps d’ús (2000 minuts gratuïts al mes).
@@ -45,17 +48,17 @@ jobs:
       - run: echo "Hola, món!"
 ```
 
-name: Nom opcional del workflow.
-• on: Esdeveniments que activen el workflow (push, PR, etc.).
-• jobs: Agrupació de tasques que defineixen el flux de treball.
-• steps: Comandes o accions a executar dins del job.
+- name: Nom opcional del workflow.
+- on: Esdeveniments que activen el workflow (push, PR, etc.).
+- jobs: Agrupació de tasques que defineixen el flux de treball.
+- steps: Comandes o accions a executar dins del job.
 
 ### Elements avançats en workflows
 
-• needs: Per especificar dependències entre jobs i assegurar execució seqüencial.
-• runs-on: Defineix el sistema operatiu del runner.
-• env: Variables d’entorn per personalitzar els jobs.
-• strategy: Permet executar variacions d’un mateix job (per exemple, amb diferents versions de Node.js).
+- needs: Per especificar dependències entre jobs i assegurar execució seqüencial.
+- runs-on: Defineix el sistema operatiu del runner.
+- env: Variables d’entorn per personalitzar els jobs.
+- strategy: Permet executar variacions d’un mateix job (per exemple, amb diferents versions de Node.js).
 
 ```yaml
 jobs:
@@ -71,11 +74,28 @@ jobs:
       - run: npm install && npm test
 ```
 
-## Accions personalitzades
+## Custom GitHub Actions
 
-Les accions personalitzades permeten definir tasques específiques reutilitzables en diversos workflows. Hi ha dos tipus principals:
-• Docker-container actions: Funcionen en entorns Linux. Són més lentes però consistents.
-• Javascript actions: Més ràpides i lleugeres, però han de ser compatibles amb tots els runners si s’utilitzen fora de Linux.
+Són tasques individuals que pots combinar per crear feines i personalitzar el teu flux de treball. S'executen dins d'un **step**, que forma part d'un **job**, que compon un **workflow**.
+
+Hi ha dos tipus principals:
+
+- Docker-container actions: Funcionen en entorns Linux. Són més lentes però consistents.
+- Javascript actions: Més ràpides i lleugeres, però han de ser compatibles amb tots els runners si s’utilitzen fora de Linux.
+
+### Sintaxi
+
+- Les Actions requereixen un fitxer de metadades en format YAML (`.yml` o `.yaml`).
+- Les dades principals d'aquest fitxer són:
+  - **name** (nom): Obligatori.
+  - **autor**: Opcional.
+  - **description**: Obligatori. Descripció breu de l'Action.
+  - **inputs** (entrades): Opcional. Defineix paràmetres d'entrada.
+  - **outputs** (eixides): Opcional. Defineix les dades generades per l'Action.
+  - **runs**: Obligatori. Defineix com s'executa l'Action.
+    - Versió Javascript: Apunta al codi principal.
+    - Versió Docker: Defineix la imatge o Dockerfile utilitzat.
+  - **branding**: Opcional. Defineix color e icono per al marketplace.
 
 ```yaml
 name: Salutació
@@ -91,6 +111,43 @@ runs:
   using: "node12"
   main: "index.js"
 ```
+
+## Exemple GitHub Action en Javascript
+
+1. Crear fitxer `action.yml`:
+   - Ubicació: `.github/actions/hello-world-javascript-action/action.yml`.
+2. Crear projecte Node:
+   - `npm init -y`.
+   - Instal·lar dependències:
+     ```bash
+     npm install @actions/core
+     npm install @actions/github
+     ```
+3. Crear `index.js` amb la lògica principal.
+4. Compilar el projecte:
+   - Instal·lar la llibreria per compilar:
+     ```bash
+     npm i -g @vercel/ncc
+     ```
+   - Compilar l'arxiu principal:
+     ```bash
+     ncc build index.js
+     ```
+   - Actualitzar `action.yml`:
+     ```yaml
+     main: "dist/index.js"
+     ```
+5. Provar l'Action dins d'un workflow.
+
+---
+
+## Exemple GitHub Action en Docker
+
+1. Crear un `Dockerfile` amb la configuració necessària.
+2. Crear el fitxer `action.yml` que defineix com s'executarà l'Action.
+3. Provar l'Action dins d'un workflow.
+
+---
 
 ---
 
@@ -177,32 +234,39 @@ Fem el commit i comprovem que haja passat tots els jobs i que haja generat corre
 
 ### Badge-job
 
-Primer, creem un nou directori actions/update-badge , i iniciem un projecte de node amb npm init -y
+Primer, creem un nou directori dins de .github/workflow (actions/update-badge) , e iniciem un nou projecte de node amb _npm init -y_
 ![](capturas/badge/npm_init_badge.png)
 
-Seguidament, creem el arxiu action.yml que consisteix en una accio personalitzada que te com a input obligatori el resultat del test que hem executat anteriorment amb cypress. Tot s'executa en node 20
+Seguidament, creem el arxiu action.yml que consisteix en una accio personalitzada que te com a input obligatori el resultat del test que hem executat anteriorment amb cypress. Executa l'arxiu que compilarem i que conte la funcionalitat , en node versió 20
 
 ![](capturas/badge/badge_action.png)
 
-Creem l'arxiu index.js a l' arrel del projecte que será el que conté tota la lógica que duga a terme l'acció. Es una funció en javascript que te com a únic argument test_result i que dependent de el seu valor asigna una imatge diferent a la variable badge.
-Finalment, el script modifica l' arxiu README.md i asigna el valor de badge dins d'uns comentaris especifics.
+Creem l'arxiu index.js a l' arrel del projecte que será el que conté tota la lógica que duga a terme l'acció. Es una funció en javascript que te com a únic argument testResult i que dependent de el seu valor asigna una imatge diferent a la variable badge.
+LLig el contingut de readme.
+E inserta el valor de badge dins d'uns comentaris especifics i finalitza actualizant l' arxiu README.md .
 
 ![](capturas/badge/badge_index.png)
 
-Tot seguit, instalem les dependencies (actions/core i actions/github i vercel/ncc ) per a que el script funcione degudament i pugam compilar-lo.
-![](capturas/badge/npm_i_npm_build.png.png)
+Tot seguit, instalem les dependencies (actions/core , actions/github i vercel/ncc ) per a que el script funcione degudament i pugam compilar-lo.
+![](capturas/badge/npm_i_npm_build.png)
 
 Captura del package.json de l'acció
 ![](capturas/badge/badge_pckg.png)
 
 Passem al pipeline i definim un nou job que conte:
 
+- S'executa amb l' ultima versió d'Ubuntu
 - Precisa de l'accio anterior per poder executar-se
-- Checkout, per accedir als arxius del projecte
-- Descarrega el artifact de l'acció anterior
-- Crea i asigna a una variable el contingut del artifact
-- Crida a la action personalitzada que acavem de crear amb la variable
-- Finalment, per modificar el Readme fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura
+- Primer pas
+  - Checkout, per accedir als arxius del projecte
+- Segon pas
+  - Descarrega el artifact de l'acció anterior, des del mateix path
+- Tercer pas
+  - Crea i asigna a una variable el contingut del artifact
+- Quart pas
+  - Crida a la action personalitzada que acavem de crear amb la variable creada en el pas anterior
+- Quint pas
+  - Finalment, per modificar el Readme fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura
 
 ![](capturas/badge/badge_job.png)
 
@@ -214,8 +278,9 @@ Pugem els canvis i comprovem que s'executen les dos actions associades.
 ![](capturas/badge/ok_1.png)
 ![](capturas/badge/ok_2.png)
 
-FALLO
-Per tal de comprovar que posa el badge de fallo, insertem un test que falle.
+**FALLO**
+
+Per tal de comprovar que el badge de fallo s'executa degudament, insertem un test que falle.
 ![](capturas/badge/fallo.png)
 
 Fem el commit, pugem els canvis i esperem a que s'executen els works corresponents i comprovem els logs:
@@ -230,10 +295,19 @@ Badge actualizat:
 Primer que res hem de vincular el nostre projecte amb Vercel, per aixo executem en consola vercel y configurem el projecte seguint les preguntes
 ![](capturas/deploy/vercel_cli.png)
 
-Generem un token desde Vercel i amb els tokens que ha generat la vinculacio del projecte els almacenem com a secrets per a les actions
+Generem un token desde Vercel i junt amb els tokens que ha generat la vinculacio del projecte, els almacenem com a secrets per a les actions
 ![](capturas/deploy/token_vercel.png)
 ![](capturas/deploy/secrets-vercel.png)
-Creem el deploy-job que consistirá en un checkout i l' action específica de Vercel
+
+Creem el deploy-job que consistirá en un job amb:
+
+- S'executa amb l' ultima versió d'Ubuntu
+- Precisa del cypress-job per executa-se
+- Primer pas
+  - Checkout, per accedir als arxius del projecte
+- Segon pas
+  - Deploy amb l'acció específica de Vercel, amb els tokens generats i establint el directory de treball
+
 ![](capturas/deploy/deploy-job.png)
 
 Fem el commit i comprovem que haja passat tots els jobs i que s'haja desplegat correctament a Vercel.
@@ -242,14 +316,73 @@ Fem el commit i comprovem que haja passat tots els jobs i que s'haja desplegat c
 
 ### Notification-job
 
-(Com vam parlar en clase, canviem l'envio de un mail per un missatge a Telegram)
+\*En el meu cas, he fet ús de Telegram per a fer l' acció
+
+Creem un nou directori dins de .github/workflow/actions (notification-job) , e iniciem un nou projecte de node amb _npm init -y_
+![](capturas/notification/npm_init.png)
+
+Seguidament, creem l'arxiu action.yml que consisteix en una accio personalitzada que te com a inputs obligatoris:
+
+- Token del bot de Telegram
+- Id del usuari de Telegram
+- Nom del workflow
+- Resultats dels cuatre jobs anteriors
+- Retorna l' estat del enviament de la notificació
+
+Finalment, executa l'arxiu que compilarem i que conte la funcionalitat (dist/index.js), en node versió 20
+
+![](capturas/notification/action.png)
+
+Creem l'arxiu index.js a l' arrel del projecte que será el que continga tota la lógica que durá a terme l'acció.
+Es una funció en javascript que te com a arguments les set variables que hem nomenat en el punt anterior.
+Crea una plantilla en el que informa de l' estat del workflow i finalment l' envía al bot de Telegram
+
+![](capturas/notification/indexjs.png)
+
+Tot seguit, instalades les dependencies (actions/core , actions/github i vercel/ncc ) necesaries per a que el script funcione degudament i pugam compilar-lo, també instalem la dependencia per a enviar el missatge al bot.
+![](capturas/notification/npm_bot.png)
+
+Captura del package.json de l'acció
+![](capturas/notification/package.png)
+
+Passem al pipeline i definim un nou job que conté:
+
+- S'executa amb l' ultima versió d'Ubuntu
+- S'executa sempre
+- Precisa dels cuatre jobs anteriors
+- Primer pas
+  - Checkout, per accedir als arxius del projecte
+- Segon pas
+  - Executa l'action personalitzada que acavem de crear amb les variables anteriorment descrites.
+
+![](capturas/notification/job.png)
+
+En Telegram, creem un nou bot amb Bot Father i copiem el token
+![](capturas/notification/bot_father.png)
+
+Aconseguim l' id del compte i el copiem com un token
+![](capturas/notification/bot_raw.png)
+
+Almacenem els tokens com un secret en Actions > Repository Secrets
+![](capturas/notification/tokens.png)
+
+Fem un commit amb els canvis i comprovem que tot vaja com es degut.
+![](capturas/notification/ok.png)
+
+**FALLO**
+
+Per tal de comprovar que en cas de un error en un job, s'executa degudament, forcem un error en l'execucio d'un job .
+![](capturas/notification/fallo.png)
+
+Finalment, captura amb les dos notificacions.
+![](capturas/notification/final.png)
 
 ### Readme
 
 Primer que res, creem un token desde el perfil de GitHub > Settings > Developer Settings > Personal Access Tokens > Tokens classic > Generate new token.
 ![](capturas/readme/token_metrics.png)
 
-I el guardem com una secret en Actions > Repository Secrets
+I el guardem com un secret en Actions > Repository Secrets
 ![](capturas/readme/token_metrics_2.png)
 
 Despres, modifiquem el Readme per poder mostrar les metriques, al final del arxiu fem un apartat dedicat

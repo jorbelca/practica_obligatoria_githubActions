@@ -147,7 +147,7 @@ runs:
 2. Crear el fitxer `action.yml` que defineix com s'executarà l'Action.
 3. Provar l'Action dins d'un workflow.
 
----
+## <br>
 
 ---
 
@@ -155,7 +155,7 @@ runs:
 
 # Pràctica
 
-Primer que res, creem un repositori propi i clonem el repo que ens dona l’ enunciat.
+Primer que res, creem un repositori i clonem el repo que ens dona l’ enunciat.
 ![](capturas/1.png)
 ![](capturas/clonar.png)
 
@@ -171,15 +171,23 @@ Comprovem que el projecte s' inicia correctament
 Executem npm run lint en local perque comprove la sintaxi
 ![](capturas/linter/lint.png)
 
-Corregim tots els errors i executem npm lint
+Podem vore que els erros consisteixen en el mal us de cometes simples, l' utilitzacio de var i el default en el switch
+![](capturas/linter/errors_1.png)
+![](capturas/linter/errors_2.png)
 
-FALTA CAPTURA DELS ERRORS I LA SEUA CORRECCIO
+Errors corregits (incluit el del POST0, per a la part de cypress)
+![](capturas/linter/correccio_1.png)
+![](capturas/linter/correccio_2.png)
+
+Executem npm lint
 ![](capturas/linter/lint_corregit.png)
 
-Creem la carpeta .github i dins de /workflows creem l'arxiu pipeline.yml amb:
+Per a crear una action de Github, creem la carpeta .github i dins de /workflows creem l'arxiu pipeline.yml amb:
+
+---
 
 - Nom: main
-- Que s'execute cada vegada que fem un push al repositori
+- on:push (Que s'execute cada vegada que fem un push al repositori)
 
 I definim un nou job que correspon a EsLint i que conte:
 
@@ -200,14 +208,14 @@ Fem el commit i comprovem que passe el job de linter
 ### Cypress-job
 
 Primerament, executem i comprovem que els test no passen en local.
-Seguidament, amb els resultats corregim els errors que hi havia en el codi
-FALTA CAPTURA DE TOTS ELS ERRORS I LA SEUA CORRECCIO
+Seguidament, amb els resultats del test, corregim els errors que hi havia en el codi (POST0, anteriorment corregit)
+
 ![](capturas/cypress/bug.png)
 
 Tornem a executar en local cypress per comprovar que els tests s'executen correctament
 ![](capturas/cypress/cypress-local.png)
 
-Dins de /workflows creem l' action que correspon a Cypress
+Dins de /workflows creem una nova action que correspon a Cypress (cypress-job)
 
 - S'executa amb l' ultima versió d'Ubuntu
 - Precisa del lint-job per a poder executar-se
@@ -216,7 +224,8 @@ Dins de /workflows creem l' action que correspon a Cypress
 - Segon pas
   - Executa l'action setup-node per instalar i configurar node en el job amb la versio 20.
 - Tercer pas
-  - Amb l'action cypress-io, executem els tests (npm run dev):
+  - Amb l'action cypress-io, executem els tests :
+    - Iniciem el servidor (npm run dev)
     - En chrome
     - Te que esperar a que localhost:3000 estiga actiu abans de començar
     - Publica els resultats
@@ -264,9 +273,9 @@ Passem al pipeline i definim un nou job que conte:
 - Tercer pas
   - Crea i asigna a una variable el contingut del artifact
 - Quart pas
-  - Crida a la action personalitzada que acavem de crear amb la variable creada en el pas anterior
+  - Crida a la action personalitzada que modifica el Readme amb la variable creada en el pas anterior
 - Quint pas
-  - Finalment, per modificar el Readme fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura
+  - Finalment, per fem ús de la action endbug-add-and-commit que fara us d'un token amb permisos d' escriptura, per a fer un commit amb els canvis al Readme .
 
 ![](capturas/badge/badge_job.png)
 
@@ -299,7 +308,7 @@ Generem un token desde Vercel i junt amb els tokens que ha generat la vinculacio
 ![](capturas/deploy/token_vercel.png)
 ![](capturas/deploy/secrets-vercel.png)
 
-Creem el deploy-job que consistirá en un job amb:
+Creem el deploy-job, un job que consistirá en:
 
 - S'executa amb l' ultima versió d'Ubuntu
 - Precisa del cypress-job per executa-se
@@ -353,7 +362,7 @@ Passem al pipeline i definim un nou job que conté:
 - Primer pas
   - Checkout, per accedir als arxius del projecte
 - Segon pas
-  - Executa l'action personalitzada que acavem de crear amb les variables anteriorment descrites.
+  - Executa l'action personalitzada que acavem de crear amb les variables anteriorment descrites (son variables de context que ofereix github dins de les accions).
 
 ![](capturas/notification/job.png)
 
